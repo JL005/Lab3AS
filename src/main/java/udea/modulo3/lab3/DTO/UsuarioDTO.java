@@ -7,15 +7,13 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class UsuarioDTO {
 
     private String nombre;
     private String apellido;
-    private long grupo;
-    private long tipoUsuario;
     private String celular;
     private String email;
     private String password;
     private String nroDocumento;
-    private String nroServicios;
 }

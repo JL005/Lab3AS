@@ -5,11 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 
 import io.swagger.annotations.ApiModel;
@@ -19,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @Getter
@@ -26,42 +23,48 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "usuario")
-@ApiModel(description = "Todos los detalles de un Usuario")
+@ApiModel(description = "Detalles sobre los usuarios del sistema.")
 public class Usuario {
-    @ApiModelProperty("La base de datos genera el ID del usuario")
     @Id
     @Column(name = "id_usuario")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(notes = "Identificador del usuario", required = true)
     private long idUsuario;
 
-    @ManyToOne
-    @JoinColumn(name = "id_tipo_usuario")
-    private TipoUsuario tipoUsuario;
-    @Column(name = "nombre", nullable = false, length = 50)
+    @Column(name = "nombre", nullable = false)
+    @ApiModelProperty(notes = "Nombre del usuario", required = true)
     private String nombre;
 
-    @Column(name = "apellido", nullable = false, length = 50)
+    @Column(name = "apellido", nullable = false)
+    @ApiModelProperty(notes = "Apellido del usuario", required = true)
     private String apellido;
 
-    @Column(name="celular", nullable = false, length = 10)
+    @Column(name="celular", nullable = false)
+    @ApiModelProperty(notes = "Celular del usuario", required = true)
     private String celular;
 
-    @Column(name="email", nullable = false, length = 50)
+    @ApiModelProperty(notes = "Email del usuario", required = true)
+    @Column(name="email", nullable = false)
     @Email
     private String email;
 
-    @Column(name="password", nullable = false, length = 256)
+    @Column(name="password", nullable = false)
+    @ApiModelProperty(notes = "Password del usuario", required = true)
     private String password;
 
-    @Column(name="nro_documento", nullable = false, length = 20)
+    @Column(name="nro_documento", nullable = false)
+    @ApiModelProperty(notes = "Número de documento del usuario", required = true)
     private String nroDocumento;
 
-    @Column(name="rol", nullable = true, length = 20)
+    @Column(name="rol", nullable = true)
+    @ApiModelProperty(notes = "Rol del usuario", required = true)
     private String rol;
 
-    @Column(name="nro_servicios", nullable = true, length = 10)
+    @Column(name="nro_servicios", nullable = true)
+    @ApiModelProperty(notes = "Número de servicios del usuario", required = true)
     private String nroServicios;
 
 }

@@ -2,43 +2,41 @@ package udea.modulo3.lab3.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import lombok.RequiredArgsConstructor;
+import udea.modulo3.lab3.DAO.UsuarioDAO;
 import udea.modulo3.lab3.DTO.UsuarioDTO;
-import udea.modulo3.lab3.UsuarioMapper;
-import udea.modulo3.lab3.model.TipoUsuario;
+import udea.modulo3.lab3.utils.mapper.UsuarioMapper;
 import udea.modulo3.lab3.model.Usuario;
-import udea.modulo3.lab3.repository.TipoUsuarioRepository;
 import udea.modulo3.lab3.utils.exception.DataDuplicatedException;
-import udea.modulo3.lab3.repository.UsuarioRepository;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UsuarioService {
 
-    private UsuarioRepository usuarioRepository;
-    private TipoUsuarioRepository tipoUsuarioRepository;
+    private final UsuarioDAO usuarioRepository;
 
-    private static final String USUARIO_YA_EXISTE = "Ya existe un usuario con este email o número de cédula usuario  existe";
-
-    public UsuarioService(UsuarioRepository usuarioRepository, TipoUsuarioRepository tipoUsuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-        this.tipoUsuarioRepository = tipoUsuarioRepository;
-    }
+    // public UsuarioService(UsuarioDAO usuarioRepository, TipoUsuarioDAO tipoUsuarioDAO) {
+    //     this.usuarioRepository = usuarioRepository;
+    //     this.tipoUsuarioRepository = tipoUsuarioDAO;
+    // }
 
     public Usuario crearUsuario(UsuarioDTO usuarioDTO) {
         Usuario usuario = UsuarioMapper.crearUsuarioEntidad(usuarioDTO);
+        System.out.println("DTO");
+        System.out.println(usuarioDTO);
+        System.out.println("Entidad");
+        System.out.println(usuario);
+        System.out.println(this.existeUsuario(usuario));
         if (this.existeUsuario(usuario)) {
-            throw new DataDuplicatedException(USUARIO_YA_EXISTE);
+            System.out.println("Ya existe un usuario con este email o número de cédula.");
+            throw new DataDuplicatedException("Ya existe un usuario con este email o número de cédula.");
         }
-        this.asignarTipoUsuario(usuario, 1L);
+        System.out.println("Usuario creado");
         return this.usuarioRepository.save(usuario);
     }
 
-    private void asignarTipoUsuario(Usuario usuario, long idTipoUsuario) {
-        TipoUsuario tipoNuevoUsuario = tipoUsuarioRepository.findById(idTipoUsuario).orElse(null);
 
-        usuario.setTipoUsuario(tipoNuevoUsuario);
-    }
 
     private boolean existeUsuario(Usuario usuario) {
         return this.usuarioRepository.existsByEmailOrNroDocumento(usuario.getEmail(), usuario.getNroDocumento());
